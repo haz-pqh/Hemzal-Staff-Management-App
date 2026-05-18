@@ -1,0 +1,1846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hemzal Crispy Chicken App - Animated</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #1e1e1e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Mobile Device Wrapper mimicking iPhone aspect ratio */
+        .phone-container {
+            width: 375px;
+            height: 812px;
+            background-color: #FFD500;
+            border-radius: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Screen Visibility & Transition Layouts */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1), 
+                        transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* Triggered via JS for smooth cross-fading entry */
+        .screen.active {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ==================== 1. LOGIN & SIGNUP SCREEN ANIMATIONS ==================== */
+        #login-screen, #signup-screen {
+            justify-content: center;
+            background-color: #FFD500;
+        }
+
+        .brand-container {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: bounceIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+        }
+
+        .logo-placeholder {
+            width: 140px;
+            height: 140px;
+            background: #f5b000;
+            border-radius: 30px;
+            margin: 0 auto 10px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.15), 5px 5px 15px rgba(0,0,0,0.1);
+            font-size: 45px;
+            color: #d1232a;
+            animation: logoFloat 3s ease-in-out infinite alternate;
+        }
+
+        .brand-name {
+            font-size: 32px;
+            font-weight: 900;
+            color: #d1232a;
+            text-shadow: 1px 2px 2px rgba(0, 0, 0, 0.15);
+            font-style: italic;
+        }
+
+        .brand-subtitle {
+            font-size: 13px;
+            font-weight: 700;
+            color: #333;
+            letter-spacing: 1px;
+            margin-top: -3px;
+        }
+
+        .input-group {
+            width: 100%;
+            background-color: #FFE666;
+            padding: 14px 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            border-bottom: 2px solid #B59600;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease forwards;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .input-group:nth-child(2) { animation-delay: 0.2s; }
+        .input-group:nth-child(3) { animation-delay: 0.3s; }
+        .input-group:nth-child(4) { animation-delay: 0.4s; }
+        .input-group:nth-child(5) { animation-delay: 0.5s; }
+
+        .input-group:focus-within {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(181, 150, 0, 0.2);
+        }
+
+        .input-group input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .input-group input::placeholder {
+            color: #666;
+            font-weight: 600;
+        }
+
+        .auth-actions-container {
+            width: 100%;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .btn-login {
+            background-color: #E61C24;
+            color: white;
+            border: none;
+            width: 60%;
+            padding: 14px;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 12px rgba(230, 28, 36, 0.35);
+            opacity: 0;
+            animation: fadeInUp 0.6s ease forwards;
+            animation-delay: 0.6s;
+            transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease;
+            margin-bottom: 12px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 16px rgba(230, 28, 36, 0.45);
+        }
+
+        .btn-login:active {
+            transform: scale(0.95);
+        }
+
+        .toggle-auth-link {
+            font-size: 13px;
+            font-weight: 700;
+            color: #d1232a;
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .toggle-auth-link:hover {
+            color: #991b1b;
+            text-decoration: underline;
+        }
+
+        /* ==================== 2. DASHBOARD SCREEN ANIMATIONS ==================== */
+        #dashboard-screen {
+            background-color: #FFEAA1;
+            justify-content: flex-start;
+            padding-top: 50px;
+        }
+
+        .dashboard-content-scroll {
+            width: 100%;
+            height: calc(100% - 150px);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding-bottom: 25px;
+            padding-right: 2px;
+            scrollbar-width: none;
+        }
+
+        .dashboard-content-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .clock-widget {
+            background-color: white;
+            width: 100%;
+            border-radius: 25px;
+            padding: 18px 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            opacity: 0;
+            transform: translateY(15px);
+            border: 2px solid transparent;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .clock-widget.alert-active {
+            border-color: #E61C24;
+            box-shadow: 0 8px 24px rgba(230, 28, 36, 0.15);
+        }
+
+        #dashboard-screen.active .clock-widget {
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation-delay: 0.15s;
+        }
+
+        .clock-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .clock-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge {
+            font-size: 11px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .status-badge.alert { background-color: #FEE2E2; color: #EF4444; }
+        .status-badge.active { background-color: #D1FAE5; color: #10B981; }
+        .status-badge.late-status { background-color: #FEF3C7; color: #D97706; }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-badge.alert .status-dot { background-color: #EF4444; animation: statusPulse 1.5s infinite; }
+        .status-badge.active .status-dot { background-color: #10B981; animation: statusPulse 1.5s infinite; }
+        .status-badge.late-status .status-dot { background-color: #D97706; animation: statusPulse 1.5s infinite; }
+
+        @keyframes statusPulse {
+            0% { transform: scale(0.9); opacity: 0.4; }
+            50% { transform: scale(1.3); opacity: 1; }
+            100% { transform: scale(0.9); opacity: 0.4; }
+        }
+
+        .time-display {
+            font-size: 28px;
+            font-weight: 800;
+            color: #1e1e1e;
+            font-family: 'Courier New', Courier, monospace;
+            letter-spacing: 1px;
+            text-align: center;
+            margin: 2px 0;
+        }
+
+        .date-display {
+            font-size: 12px;
+            font-weight: 600;
+            color: #888;
+            text-align: center;
+            margin-top: -6px;
+        }
+
+        .btn-clock {
+            width: 100%;
+            background-color: #E61C24;
+            color: white;
+            border: none;
+            padding: 11px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(230, 28, 36, 0.2);
+        }
+
+        .btn-clock:active { transform: scale(0.97); }
+        .btn-clock.clocked-in { background-color: #10B981; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2); }
+
+        /* Notification Toast Styling */
+        .toast-notification {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 15px;
+            font-size: 13px;
+            font-weight: 700;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            z-index: 1000;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .toast-notification.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Top Banner Styles */
+        .top-banner {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 0 10px;
+            opacity: 0;
+            transform: translateY(-20px);
+            flex-shrink: 0;
+        }
+
+        #dashboard-screen.active .top-banner {
+            animation: slideInDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .banner-text h2 {
+            font-size: 24px;
+            color: #d1232a;
+            font-weight: 800;
+            margin-bottom: 4px;
+            line-height: 1.2;
+        }
+
+        .banner-text p {
+            font-size: 14px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background-color: #FFD500;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: 2px solid white;
+        }
+
+        /* ==================== 3. ACTION CARDS LIST ==================== */
+        .cards-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            padding: 0 10px;
+        }
+
+        .dashboard-card {
+            background-color: #FFD500;
+            width: 100%; 
+            padding: 16px 20px;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between; 
+            box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+            opacity: 0;
+            transform: translateY(20px);
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease;
+        }
+
+        .dashboard-card:hover { box-shadow: 0 8px 22px rgba(0,0,0,0.1); }
+        .dashboard-card:active { transform: scale(0.97); }
+
+        #dashboard-screen.active .dashboard-card {
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation-delay: 0.25s;
+        }
+
+        .card-left-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .progress-circle {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            transition: transform 0.3s ease;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.08);
+            flex-shrink: 0;
+        }
+
+        .dashboard-card:hover .progress-circle { transform: scale(1.08) rotate(5deg); }
+        .progress-circle i { font-size: 20px; color: #d1232a; }
+
+        .card-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: #222;
+            line-height: 1.2;
+        }
+
+        .card-subtitle-desc {
+            font-size: 11px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .card-chevron {
+            color: #d1232a;
+            font-size: 16px;
+            transition: transform 0.2s ease;
+        }
+
+        .dashboard-card:hover .card-chevron { transform: translateX(3px); }
+
+        /* ==================== LEAVE CATEGORY BALANCES GRID ==================== */
+        .leave-balances-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            width: 100%;
+            margin-top: 2px;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        #dashboard-screen.active .leave-balances-grid {
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation-delay: 0.35s;
+        }
+
+        .balance-item {
+            background: white;
+            border-radius: 18px;
+            padding: 12px 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            cursor: default;
+            border: 1.5px solid transparent;
+        }
+
+        .balance-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: conic-gradient(#E61C24 calc(var(--percent) * 1%), #F3F4F6 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: background 0.4s ease;
+        }
+
+        .balance-circle::before {
+            content: '';
+            position: absolute;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: white;
+        }
+
+        .balance-circle span {
+            position: relative;
+            font-size: 11px;
+            font-weight: 800;
+            color: #1e1e1e;
+        }
+
+        .balance-label {
+            font-size: 10px;
+            font-weight: 800;
+            color: #555;
+            text-align: center;
+        }
+
+        /* ==================== SHIFT CLOCK IN/OUT HISTORY LOG ==================== */
+        .shift-log-container {
+            width: 100%;
+            background: white;
+            border-radius: 22px;
+            padding: 15px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        #dashboard-screen.active .shift-log-container {
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation-delay: 0.4s;
+        }
+
+        .shift-log-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .shift-log-title {
+            font-size: 11px;
+            font-weight: 800;
+            color: #d1232a;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .shift-log-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 165px;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        .shift-log-list::-webkit-scrollbar { display: none; }
+
+        .shift-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 10px;
+            background: #FFFDF5;
+            border-radius: 12px;
+            border: 1px solid #FFEAA1;
+            font-size: 11px;
+            animation: fadeInUp 0.35s ease both;
+        }
+
+        .shift-row.active-shift { background: #ECFDF5; border-color: #D1FAE5; }
+        .shift-row.late-shift { background: #FFFBEB; border-color: #FCD34D; }
+
+        .shift-info-left { display: flex; flex-direction: column; gap: 2px; }
+        .shift-date-label { font-weight: 800; color: #1e1e1e; font-size: 11px; }
+        .shift-timestamps { color: #666; font-family: 'Courier New', Courier, monospace; font-weight: 700; font-size: 10px; }
+
+        .shift-info-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+        .shift-duration { font-weight: 800; color: #333; font-size: 11px; }
+        .shift-ot-label { font-size: 9px; font-weight: 800; color: #D97706; background: #FEF3C7; padding: 1px 5px; border-radius: 4px; margin-top: 1px; }
+
+        .shift-status-badge { font-size: 9px; font-weight: 800; padding: 2px 8px; border-radius: 10px; text-transform: uppercase; }
+        .shift-status-badge.active { background: #D1FAE5; color: #047857; animation: statusPulse 2s infinite; }
+        .shift-status-badge.late { background: #FEF3C7; color: #B45309; }
+        .shift-status-badge.completed { background: #E5E7EB; color: #4B5563; }
+
+        /* ==================== ANNOUNCEMENT CAROUSEL ==================== */
+        .announcements-container {
+            width: 100%;
+            background: white;
+            border-radius: 22px;
+            padding: 15px 18px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        #dashboard-screen.active .announcements-container {
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation-delay: 0.45s;
+        }
+
+        .announcement-header { display: flex; justify-content: space-between; align-items: center; }
+        .announcement-title { font-size: 11px; font-weight: 800; color: #d1232a; text-transform: uppercase; letter-spacing: 0.8px; display: flex; align-items: center; gap: 6px; }
+        .announcement-badge { font-size: 9px; font-weight: 800; background-color: #FEE2E2; color: #D1232a; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; }
+        .announcements-wrapper { position: relative; height: 75px; width: 100%; }
+
+        .announcement-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            opacity: 0;
+            transform: translateY(10px);
+            visibility: hidden;
+            transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+        }
+
+        .announcement-slide.active { opacity: 1; transform: translateY(0); visibility: visible; }
+        .slide-icon { width: 38px; height: 38px; background: #FFF9E6; color: #d1232a; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+        .slide-content { display: flex; flex-direction: column; gap: 2px; }
+        .slide-heading { font-size: 13px; font-weight: 800; color: #1e1e1e; line-height: 1.2; }
+        .slide-text { font-size: 11px; font-weight: 600; color: #666; line-height: 1.3; }
+        .announcement-dots { display: flex; justify-content: center; gap: 5px; margin-top: 2px; }
+        .dot { width: 6px; height: 6px; border-radius: 50%; background-color: #E5E7EB; cursor: pointer; transition: background-color 0.3s, transform 0.3s; }
+        .dot.active { background-color: #d1232a; transform: scale(1.2); }
+
+        /* ==================== 4. LEAVE APPLICATION SCREEN ==================== */
+        #leave-screen {
+            background-color: #FFEAA1;
+            justify-content: flex-start;
+            padding-top: 50px;
+            padding-left: 12px;
+            padding-right: 12px;
+        }
+
+        .leave-container {
+            width: 100%;
+            height: calc(100% - 130px);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow-y: auto;
+            padding-right: 2px;
+            scrollbar-width: thin;
+        }
+
+        .leave-container::-webkit-scrollbar { width: 4px; }
+        .leave-container::-webkit-scrollbar-thumb { background: #d1232a; border-radius: 10px; }
+        .leave-header-bar { width: 100%; display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding: 0 4px; }
+        .leave-header-bar h2 { font-size: 22px; color: #d1232a; font-weight: 800; }
+        
+        .back-dash-btn {
+            background: #FFD500;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .leave-form-card {
+            background: white;
+            border-radius: 20px;
+            padding: 18px 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .form-title { font-size: 14px; font-weight: 800; color: #333; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #FFEAA1; padding-bottom: 6px; margin-bottom: 4px; }
+        .form-control { display: flex; flex-direction: column; gap: 5px; width: 100%; }
+        .form-control label { font-size: 11px; font-weight: 700; color: #666; text-transform: uppercase; }
+        
+        .form-control select, .form-control input, .form-control textarea {
+            width: 100%;
+            padding: 11px 12px;
+            border-radius: 10px;
+            border: 2px solid #FFEAA1;
+            outline: none;
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            background: #FFFDF5;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-control select:focus, .form-control input:focus, .form-control textarea:focus { border-color: #FFD500; }
+        .date-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
+
+        .mc-upload-container {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .mc-upload-container.show { display: flex; opacity: 1; transform: translateY(0); }
+        .file-dropzone { border: 2px dashed #E61C24; background: #FEF2F2; border-radius: 12px; padding: 15px; text-align: center; cursor: pointer; transition: all 0.2s ease; position: relative; }
+        .file-dropzone:hover { background: #FEE2E2; border-color: #B51218; }
+        .file-dropzone input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+        .dropzone-inner { display: flex; flex-direction: column; align-items: center; gap: 6px; color: #E61C24; }
+        .dropzone-inner i { font-size: 24px; }
+        .dropzone-text { font-size: 12px; font-weight: 700; }
+        .dropzone-subtext { font-size: 10px; color: #777; }
+
+        .file-attached-preview { display: none; background: #ECFDF5; border: 2px solid #10B981; border-radius: 12px; padding: 12px 15px; align-items: center; justify-content: space-between; animation: fadeInUp 0.3s ease; }
+        .file-preview-info { display: flex; align-items: center; gap: 10px; color: #065F46; }
+        .file-preview-info i { font-size: 18px; }
+        .file-name-text { font-size: 12px; font-weight: 700; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        
+        .btn-remove-file { background: none; border: none; color: #EF4444; font-size: 16px; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; }
+        .btn-remove-file:hover { transform: scale(1.2); }
+        .history-attachment-tag { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; color: #047857; background-color: #D1FAE5; padding: 2px 8px; border-radius: 10px; margin-top: 5px; align-self: flex-start; }
+
+        .btn-submit-leave {
+            background-color: #E61C24;
+            color: white;
+            border: none;
+            padding: 13px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 10px rgba(230, 28, 36, 0.2);
+            text-align: center;
+            margin-top: 5px;
+            width: 100%;
+        }
+
+        .btn-submit-leave:active { transform: scale(0.97); }
+        .leave-history-section { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; width: 100%; }
+        .history-title { font-size: 13px; font-weight: 800; color: #555; text-transform: uppercase; padding-left: 4px; }
+        .leave-history-list { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+        
+        .history-card {
+            background: white;
+            border-radius: 15px;
+            padding: 12px 15px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.03);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 5px solid #E61C24;
+            animation: fadeInUp 0.5s ease both;
+            width: 100%;
+        }
+        .history-card.approved { border-left-color: #10B981; }
+        .history-card.pending { border-left-color: #F59E0B; }
+        .history-card.rejected { border-left-color: #EF4444; }
+
+        .history-details { display: flex; flex-direction: column; gap: 2px; }
+        .history-type { font-size: 13px; font-weight: 800; color: #222; }
+        .history-date { font-size: 11px; font-weight: 600; color: #777; }
+        .history-reason { font-size: 11px; color: #999; font-style: italic; }
+        
+        .history-badge { font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 12px; text-transform: uppercase; }
+        .history-badge.approved { background: #D1FAE5; color: #10B981; }
+        .history-badge.pending { background: #FEF3C7; color: #D97706; }
+        .history-badge.rejected { background: #FEE2E2; color: #EF4444; }
+
+        /* ==================== 5. USER PROFILE SCREEN ==================== */
+        #profile-screen {
+            background-color: #FFEAA1;
+            justify-content: flex-start;
+            padding-top: 50px;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 25px;
+            padding: 22px 20px;
+            width: 100%;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .profile-avatar-large { width: 85px; height: 85px; background-color: #FFD500; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 38px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 3px solid white; color: #1e1e1e; }
+        .profile-name-title { font-size: 22px; font-weight: 800; color: #d1232a; }
+        .profile-role-badge { font-size: 11px; font-weight: 800; background-color: #FFF3C7; color: #D97706; padding: 3px 12px; border-radius: 20px; text-transform: uppercase; margin-top: -8px; }
+        
+        .profile-details-grid { width: 100%; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid #FFEAA1; padding-top: 15px; margin-top: 5px; }
+        .profile-detail-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 600; }
+        .profile-detail-row span:first-child { color: #777; text-transform: uppercase; font-size: 10px; font-weight: 800; }
+        .profile-detail-row span:last-child { color: #222; font-weight: 700; }
+
+        .payroll-card {
+            background: linear-gradient(135deg, #E61C24, #B51218);
+            border-radius: 22px;
+            width: 100%;
+            padding: 16px 20px;
+            box-shadow: 0 6px 15px rgba(230, 28, 36, 0.2);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .payroll-card-header { display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9; }
+        .payroll-amount { font-size: 26px; font-weight: 900; font-family: 'Courier New', Courier, monospace; }
+        .payroll-sub-text { font-size: 10px; opacity: 0.8; font-weight: 600; line-height: 1.3; }
+        
+        .btn-logout {
+            background-color: #1e1e1e;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 13px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 13px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: background-color 0.2s, transform 0.2s;
+            margin-top: 5px;
+        }
+        .btn-logout:hover { background-color: #333; }
+        .btn-logout:active { transform: scale(0.97); }
+
+        /* ==================== 6. PAYSLIP SCREEN ==================== */
+        #payslip-screen {
+            background-color: #FFEAA1;
+            justify-content: flex-start;
+            padding-top: 50px;
+        }
+
+        .cycle-select-container { width: 100%; display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+        .cycle-select-container label { font-size: 11px; font-weight: 800; color: #d1232a; text-transform: uppercase; letter-spacing: 0.5px; }
+        .payslip-details-card { background: white; border-radius: 20px; padding: 16px 18px; width: 100%; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 10px; }
+        .payslip-sec-title { font-size: 11px; font-weight: 800; color: #888; text-transform: uppercase; border-bottom: 1px solid #FFEAA1; padding-bottom: 4px; margin-bottom: 2px; }
+        .payslip-row { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; color: #333; }
+        .payslip-row.deduction { color: #DC2626; }
+        
+        .payslip-total-row { display: flex; justify-content: space-between; font-size: 16px; font-weight: 800; color: #1e1e1e; border-top: 2px dashed #E5E7EB; padding-top: 10px; margin-top: 5px; }
+        .payslip-total-amount { color: #10B981; font-family: 'Courier New', Courier, monospace; }
+        
+        .btn-payslip-action { background-color: #E61C24; color: white; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: 800; font-size: 13px; cursor: pointer; box-shadow: 0 4px 10px rgba(230, 28, 36, 0.2); transition: all 0.2s; margin-top: 5px; text-align: center; }
+        .btn-payslip-action:active { transform: scale(0.97); }
+        
+        .payslip-history-section { width: 100%; display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
+        .payslip-history-title { font-size: 11px; font-weight: 800; color: #555; text-transform: uppercase; letter-spacing: 0.5px; padding-left: 2px; }
+        .payslip-history-list { display: flex; flex-direction: column; gap: 6px; }
+        
+        .payslip-history-row { background: white; border-radius: 14px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 6px rgba(0,0,0,0.02); cursor: pointer; transition: transform 0.2s; }
+        .payslip-history-row:active { transform: scale(0.98); }
+        .payslip-history-info { display: flex; flex-direction: column; gap: 2px; }
+        .payslip-history-month { font-size: 13px; font-weight: 800; color: #222; }
+        .payslip-history-status { font-size: 9px; font-weight: 800; color: #10B981; background-color: #D1FAE5; padding: 1px 6px; border-radius: 10px; align-self: flex-start; }
+        .payslip-history-amount { font-size: 14px; font-weight: 800; color: #333; font-family: 'Courier New', Courier, monospace; }
+
+        /* ==================== 7. NAVIGATION BAR ==================== */
+        .bottom-nav-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 95px;
+            background-color: #FFD500;
+            border-radius: 35px 35px 0 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: 15px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+            transform: translateY(100px);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
+            z-index: 100;
+        }
+
+        #dashboard-screen.active .bottom-nav-container, 
+        #leave-screen.active .bottom-nav-container, 
+        #profile-screen.active .bottom-nav-container, 
+        #payslip-screen.active .bottom-nav-container {
+            transform: translateY(0);
+        }
+
+        .bottom-nav-container::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 15px;
+            background-color: #E61C24;
+        }
+
+        .nav-btn {
+            width: 50px;
+            height: 50px;
+            background-color: #E61C24;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(230, 28, 36, 0.3);
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s;
+        }
+
+        .nav-btn.active-tab { background-color: #B51218; box-shadow: inset 0 2px 5px rgba(0,0,0,0.3); }
+        .nav-btn:active { transform: scale(0.85); }
+
+        .nav-btn.center-btn {
+            width: 65px;
+            height: 65px;
+            font-size: 28px;
+            transform: translateY(-15px);
+            box-shadow: 0 6px 15px rgba(230, 28, 36, 0.4);
+            position: relative;
+        }
+
+        .nav-btn.center-btn::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #E61C24;
+            border-radius: 50%;
+            z-index: -1;
+            animation: pulseWave 2s infinite;
+        }
+
+        .nav-btn.center-btn:active { transform: translateY(-15px) scale(0.9); }
+
+        @keyframes pulseWave {
+            0% { transform: scale(1); opacity: 0.35; }
+            100% { transform: scale(1.4); opacity: 0; }
+        }
+
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.3); }
+            50% { opacity: 1; transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideInDown { to { opacity: 1; transform: translateY(0); } }
+        @keyframes logoFloat { from { transform: translateY(0); } to { transform: translateY(-8px); } }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container">
+        
+        <div id="toast" class="toast-notification">
+            <i id="toast-icon" class="fa-solid fa-circle-check"></i>
+            <span id="toast-message">Notification Message</span>
+        </div>
+
+        <div id="login-screen" class="screen active">
+            <div class="brand-container">
+                <div class="logo-placeholder">
+                    <!-- <i class="fa-solid fa-chicken"></i> -->
+                     <img src="image-removebg-preview (6).png" width="110%">
+                </div>
+                <h1 class="brand-name">Hemzal Crispy</h1>
+                <p class="brand-subtitle">INTERNAL STAFF PORTAL</p>
+            </div>
+
+            <div style="width: 100%; padding: 0 10px; display: flex; flex-direction: column; align-items: center;">
+                <div class="input-group">
+                    <input type="text" id="login-username" placeholder="Username or Employee ID">
+                </div>
+                <div class="input-group">
+                    <input type="password" id="login-password" placeholder="Password">
+                </div>
+                
+                <div class="auth-actions-container">
+                    <button class="btn-login" onclick="handleAuthLogin()">Sign In</button>
+                    <div>
+                        <span class="toggle-auth-link" onclick="navigateTo('signup-screen')">Don't have an account? Sign Up</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="signup-screen" class="screen">
+            <div class="brand-container">
+                <div class="logo-placeholder">
+                    <i class="fa-solid fa-user-plus"></i>
+                </div>
+                <h1 class="brand-name">Join Hemzal</h1>
+                <p class="brand-subtitle">CREATE STAFF ACCOUNT</p>
+            </div>
+
+            <div style="width: 100%; padding: 0 10px; display: flex; flex-direction: column; align-items: center;">
+                <div class="input-group">
+                    <input type="text" id="signup-name" placeholder="Full Name">
+                </div>
+                <div class="input-group">
+                    <input type="email" id="signup-email" placeholder="Email Address">
+                </div>
+                <div class="input-group">
+                    <input type="text" id="signup-username" placeholder="Choose Username">
+                </div>
+                <div class="input-group">
+                    <input type="password" id="signup-password" placeholder="Create Password">
+                </div>
+                
+                <div class="auth-actions-container">
+                    <button class="btn-login" onclick="handleAuthSignup()">Register Account</button>
+                    <div>
+                        <span class="toggle-auth-link" onclick="navigateTo('login-screen')">Already registered? Log In</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="dashboard-screen" class="screen">
+            <div class="top-banner">
+                <div class="banner-text">
+                    <h2 id="welcome-username">Hello, Member!</h2>
+                    <p>Welcome to your workspace</p>
+                </div>
+                <div class="user-avatar">
+                    <i class="fa-solid fa-user-tie"></i>
+                </div>
+            </div>
+
+            <div class="dashboard-content-scroll">
+                <div id="clock-card" class="clock-widget alert-active">
+                    <div class="clock-header">
+                        <span class="clock-title">Shift Attendance Scheduler</span>
+                        <div id="status-badge" class="status-badge alert">
+                            <div class="status-dot"></div>
+                            <span id="status-text">Clocked Out</span>
+                        </div>
+                    </div>
+                    <div id="live-time" class="time-display">00:00:00 PM</div>
+                    <div id="live-date" class="date-display">Monday, Jan 01, 2026</div>
+                    <button id="clock-btn" class="btn-clock" onclick="toggleShiftClock()">Clock In Entry</button>
+                </div>
+
+                <div class="leave-balances-grid">
+                    <div class="balance-item">
+                        <div id="circle-annual" class="balance-circle" style="--percent: 90;">
+                            <span id="bal-annual">90%</span>
+                        </div>
+                        <span class="balance-label">Annual Leave</span>
+                    </div>
+                    <div class="balance-item">
+                        <div id="circle-sick" class="balance-circle" style="--percent: 70;">
+                            <span id="bal-sick">70%</span>
+                        </div>
+                        <span class="balance-label">Sick Leave</span>
+                    </div>
+                    <div class="balance-item">
+                        <div id="circle-casual" class="balance-circle" style="--percent: 45;">
+                            <span id="bal-casual">45%</span>
+                        </div>
+                        <span class="balance-label">Casual</span>
+                    </div>
+                    <div class="balance-item">
+                        <div id="circle-unpaid" class="balance-circle" style="--percent: 100;">
+                            <span id="bal-unpaid">100%</span>
+                        </div>
+                        <span class="balance-label">Unpaid</span>
+                    </div>
+                    <!-- <div class="balance-item">
+                        <div class="balance-circle" style="--percent: 0;">
+                            <span>0%</span>
+                        </div>
+                        <span class="balance-label">Earned</span>
+                    </div> -->
+                </div>
+
+                <div class="cards-list">
+                    <div class="dashboard-card" onclick="switchTab('leave-screen', this)">
+                        <div class="card-left-group">
+                            <div class="progress-circle">
+                                <i class="fa-solid fa-calendar-check"></i>
+                            </div>
+                            <div class="card-info">
+                                <h3 class="card-title">Apply Leave Portal</h3>
+                                <p class="card-subtitle-desc">Request time-off & view approvals</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right card-chevron"></i>
+                    </div>
+                </div>
+
+                <div class="shift-log-container">
+                    <div class="shift-log-header">
+                        <span class="shift-log-title"><i class="fa-solid fa-timeline"></i> Recent Punch Logs</span>
+                    </div>
+                    <div id="shift-log-list" class="shift-log-list"></div>
+                </div>
+
+                <!-- <div class="announcements-container">
+                    <div class="announcement-header">
+                        <span class="announcement-title"><i class="fa-solid fa-bullhorn"></i> Portal Broadcasts</span>
+                        <span class="announcement-badge">New</span>
+                    </div>
+                    <div class="announcements-wrapper">
+                        <div class="announcement-slide active">
+                            <div class="slide-icon"><i class="fa-solid fa-fire"></i></div>
+                            <div class="slide-content">
+                                <h4 class="slide-heading">Weekend Surge Bonus!</h4>
+                                <p class="slide-text">Complete shifts on Friday-Sunday nights to achieve an extra 1.5x salary coefficient increment multiplier!</p>
+                            </div>
+                        </div>
+                        <div class="announcement-slide">
+                            <div class="slide-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                            <div class="slide-content">
+                                <h4 class="slide-heading">Safety Audit Prep</h4>
+                                <p class="slide-text">All kitchen teams must wear high-grade standard apron gear and clean oil systems before Wednesday morning inspections.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="announcement-dots">
+                        <div class="dot active" onclick="setAnnouncementSlide(0)"></div>
+                        <div class="dot" onclick="setAnnouncementSlide(1)"></div>
+                    </div>
+                </div> -->
+            </div>
+
+            <div class="bottom-nav-container">
+                <div class="nav-btn active-tab" onclick="switchTab('dashboard-screen', this)"><i class="fa-solid fa-house-chimney"></i></div>
+                <div class="nav-btn" onclick="switchTab('leave-screen', this)"><i class="fa-solid fa-calendar-plus"></i></div>
+                <div class="nav-btn center-btn" onclick="triggerBiometricVerify()"><i class="fa-solid fa-fingerprint"></i></div>
+                <div class="nav-btn" onclick="switchTab('payslip-screen', this)"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                <div class="nav-btn" onclick="switchTab('profile-screen', this)"><i class="fa-solid fa-user-gear"></i></div>
+            </div>
+        </div>
+
+        <div id="leave-screen" class="screen">
+            <div class="leave-header-bar">
+                <h2>Leave Center</h2>
+                <button class="back-dash-btn" onclick="navigateToDashboard()"><i class="fa-solid fa-arrow-left"></i></button>
+            </div>
+            
+            <div class="leave-container">
+                <div class="leave-form-card">
+                    <h3 class="form-title">Request Formal Leave</h3>
+                    <form id="leave-form" onsubmit="handleLeaveSubmit(event)">
+                        <div class="form-control" style="margin-bottom: 10px;">
+                            <label>Leave Category</label>
+                            <select id="leave-type" onchange="toggleMCOption()" required>
+                                <option value="Medical / Sick Leave">Medical / Sick Leave</option>
+                                <option value="Casual Leave">Casual Leave</option>
+                                <option value="Unpaid Leave">Unpaid Leave</option>
+                            </select>
+                        </div>
+                        <div class="date-row" style="margin-bottom: 10px;">
+                            <div class="form-control">
+                                <label>Start Date</label>
+                                <input type="date" id="start-date" required>
+                            </div>
+                            <div class="form-control">
+                                <label>End Date</label>
+                                <input type="date" id="end-date" required>
+                            </div>
+                        </div>
+                        
+                        <div id="mc-block" class="mc-upload-container show" style="margin-bottom: 10px;">
+                            <label style="font-size: 11px; font-weight: 700; color: #666; text-transform: uppercase;">Medical Certificate (MC)</label>
+                            <div class="file-dropzone">
+                                <input type="file" id="mc-file-input" accept="image/*,application/pdf" onchange="handleFileAttach()">
+                                <div class="dropzone-inner">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                                    <span class="dropzone-text">Upload Document Slip</span>
+                                    <span class="dropzone-subtext">PDF, PNG, JPG files up to 5MB</span>
+                                </div>
+                            </div>
+                            <div id="file-preview-capsule" class="file-attached-preview">
+                                <div class="file-preview-info">
+                                    <i class="fa-solid fa-file-medical"></i>
+                                    <span id="attached-file-name" class="file-name-text">mc_slip_scan.pdf</span>
+                                </div>
+                                <button type="button" class="btn-remove-file" onclick="clearAttachedFile()"><i class="fa-solid fa-circle-xmark"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="form-control" style="margin-bottom: 10px;">
+                            <label>Reason Details</label>
+                            <textarea id="leave-reason" rows="2" placeholder="Brief explanation..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit-leave">File Request Form</button>
+                    </form>
+                </div>
+
+                <div class="leave-history-section">
+                    <span class="history-title">Application Status Logs</span>
+                    <div id="leave-history-list" class="leave-history-list">
+                        <div class="history-card approved">
+                            <div class="history-details">
+                                <span class="history-type">Medical / Sick Leave</span>
+                                <span class="history-date">Feb 10, 2026 - Feb 11, 2026 (2 days)</span>
+                                <span class="history-reason">Reason: Wisdom tooth surgery extraction</span>
+                                <span class="history-attachment-tag"><i class="fa-solid fa-paperclip"></i> mc_dental_slip.jpg</span>
+                            </div>
+                            <span class="history-badge approved">Approved</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-nav-container">
+                <div class="nav-btn" onclick="switchTab('dashboard-screen', this)"><i class="fa-solid fa-house-chimney"></i></div>
+                <div class="nav-btn active-tab" onclick="switchTab('leave-screen', this)"><i class="fa-solid fa-calendar-plus"></i></div>
+                <div class="nav-btn center-btn" onclick="triggerBiometricVerify()"><i class="fa-solid fa-fingerprint"></i></div>
+                <div class="nav-btn" onclick="switchTab('payslip-screen', this)"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                <div class="nav-btn" onclick="switchTab('profile-screen', this)"><i class="fa-solid fa-user-gear"></i></div>
+            </div>
+        </div>
+
+        <div id="profile-screen" class="screen">
+            <div class="leave-header-bar">
+                <h2>My Profile</h2>
+                <button class="back-dash-btn" onclick="navigateToDashboard()"><i class="fa-solid fa-arrow-left"></i></button>
+            </div>
+
+            <div class="leave-container">
+                <div class="profile-card">
+                    <div class="profile-avatar-large"><i class="fa-solid fa-user-tie"></i></div>
+                    <div>
+                        <h3 id="profile-full-name" class="profile-name-title">Alex Mercer</h3>
+                        <span class="profile-role-badge">Kitchen Floor Supervisor</span>
+                    </div>
+                    <div class="profile-details-grid">
+                        <div class="profile-detail-row"><span>Staff ID</span><span>EM-2026-089</span></div>
+                        <div class="profile-detail-row"><span>Assigned Outlet</span><span>Ampang Jaya Branch</span></div>
+                        <div class="profile-detail-row"><span>Join Date</span><span>March 14, 2024</span></div>
+                        <div class="profile-detail-row"><span>Hourly Tier Rate</span><span>RM 14.50 / Hr</span></div>
+                    </div>
+                </div>
+
+                <div class="payroll-card">
+                    <div class="payroll-card-header">
+                        <span>Accrued Earnings Estimates</span>
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+                    <div class="payroll-amount">RM 2,482.50</div>
+                    <p class="payroll-sub-text">Calculations based on 154 hours logged + 12 hours overtime premium for the ongoing calendar payout timeline windows.</p>
+                </div>
+
+                <button class="btn-logout" onclick="performLogOut()"><i class="fa-solid fa-power-off"></i> Disconnect Session</button>
+            </div>
+
+            <div class="bottom-nav-container">
+                <div class="nav-btn" onclick="switchTab('dashboard-screen', this)"><i class="fa-solid fa-house-chimney"></i></div>
+                <div class="nav-btn" onclick="switchTab('leave-screen', this)"><i class="fa-solid fa-calendar-plus"></i></div>
+                <div class="nav-btn center-btn" onclick="triggerBiometricVerify()"><i class="fa-solid fa-fingerprint"></i></div>
+                <div class="nav-btn" onclick="switchTab('payslip-screen', this)"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                <div class="nav-btn active-tab" onclick="switchTab('profile-screen', this)"><i class="fa-solid fa-user-gear"></i></div>
+            </div>
+        </div>
+
+        <div id="payslip-screen" class="screen">
+            <div class="leave-header-bar">
+                <h2>Salary Slips</h2>
+                <button class="back-dash-btn" onclick="navigateToDashboard()"><i class="fa-solid fa-arrow-left"></i></button>
+            </div>
+
+            <div class="leave-container">
+                <div class="cycle-select-container">
+                    <label>Select Payroll Settlement Window</label>
+                    <select id="payslip-selector" onchange="updatePayslipContentView()">
+                        <option value="April 2026">April 01, 2026 - April 30, 2026 (Active)</option>
+                        <option value="March 2026">March 01, 2026 - March 31, 2026</option>
+                        <option value="February 2026">February 01, 2026 - February 28, 2026</option>
+                    </select>
+                </div>
+
+                <div class="payslip-details-card">
+                    <h3 class="form-title" id="payslip-main-header" style="border-bottom-color: #E61C24;">Earnings Overview - April 2026</h3>
+                    
+                    <span class="payslip-sec-title">Incomes / Base Additions</span>
+                    <div class="payslip-row"><span>Regular Hours (160h x RM14.50)</span><span>RM 2,320.00</span></div>
+                    <div class="payslip-row"><span id="payslip-ot-label">Overtime Hours (8h x RM21.75)</span><span id="payslip-ot-val">RM 174.00</span></div>
+                    <div class="payslip-row"><span>Performance Allowance Incentive</span><span>RM 200.00</span></div>
+
+                    <span class="payslip-sec-title" style="margin-top: 5px;">Statutory Deductions</span>
+                    <div class="payslip-row deduction"><span>EPF Staff Contribution (11%)</span><span>-RM 274.34</span></div>
+                    <div class="payslip-row deduction"><span>SOCSO Insurance Deduction</span><span>-RM 12.45</span></div>
+                    <div class="payslip-row deduction"><span>EIS Employment Loss Protection</span><span>-RM 4.70</span></div>
+
+                    <div class="payslip-total-row">
+                        <span>Net Take-home Payout</span>
+                        <span class="payslip-total-amount" id="payslip-net-amount">RM 2,402.51</span>
+                    </div>
+
+                    <button class="btn-payslip-action" onclick="generatePayslipPDF()"><i class="fa-solid fa-file-pdf"></i> Download Document Slip</button>
+                </div>
+
+                <div class="payslip-history-section">
+                    <span class="payslip-history-title">Disbursement Ledger Archive</span>
+                    <div class="payslip-history-list">
+                        <div class="payslip-history-row" onclick="selectArchivedPayslipIndex('March 2026')">
+                            <div class="payslip-history-info">
+                                <span class="payslip-history-month">March 2026 Settlement</span>
+                                <span class="payslip-history-status">Transferred</span>
+                            </div>
+                            <span class="payslip-history-amount">RM 2,510.40</span>
+                        </div>
+                        <div class="payslip-history-row" onclick="selectArchivedPayslipIndex('February 2026')">
+                            <div class="payslip-history-info">
+                                <span class="payslip-history-month">February 2026 Settlement</span>
+                                <span class="payslip-history-status">Transferred</span>
+                            </div>
+                            <span class="payslip-history-amount">RM 2,195.15</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-nav-container">
+                <div class="nav-btn" onclick="switchTab('dashboard-screen', this)"><i class="fa-solid fa-house-chimney"></i></div>
+                <div class="nav-btn" onclick="switchTab('leave-screen', this)"><i class="fa-solid fa-calendar-plus"></i></div>
+                <div class="nav-btn center-btn" onclick="triggerBiometricVerify()"><i class="fa-solid fa-fingerprint"></i></div>
+                <div class="nav-btn active-tab" onclick="switchTab('payslip-screen', this)"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                <div class="nav-btn" onclick="switchTab('profile-screen', this)"><i class="fa-solid fa-user-gear"></i></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const mockUsers = [
+            { username: "admin", password: "password", name: "Alex Mercer" }
+        ];
+
+        let activeStaffName = "Alex Mercer";
+        let isClockedIn = false;
+        let punchInTime = null;
+        let clockTimerId = null;
+        let currentSlide = 0;
+
+        let sickLeaveLeft = 70;
+        let casualLeaveLeft = 45;
+        let unpaidLeaveLeft = 100;
+
+        const shiftLogsArray = [
+            { date: "May 17, 2026", in: "08:54 AM", out: "05:02 PM", duration: "8h 8m", ot: null, late: false, active: false },
+            { date: "May 16, 2026", in: "09:12 AM", out: "05:00 PM", duration: "7h 48m", ot: null, late: true, active: false },
+            { date: "May 15, 2026", in: "08:45 AM", out: "06:30 PM", duration: "9h 45m", ot: "1h 45m", late: false, active: false }
+        ];
+
+        // Global Cross-fading Router System
+        function navigateTo(screenId) {
+            const activeScreen = document.querySelector('.screen.active');
+            const targetScreen = document.getElementById(screenId);
+
+            if (activeScreen) {
+                activeScreen.style.opacity = '0';
+                activeScreen.style.transform = 'translateY(-20px)';
+                
+                setTimeout(() => {
+                    activeScreen.classList.remove('active');
+                    activeScreen.style.display = 'none';
+
+                    targetScreen.style.display = 'flex';
+                    targetScreen.offsetHeight;
+                    
+                    targetScreen.classList.add('active');
+                    targetScreen.style.opacity = '1';
+                    targetScreen.style.transform = 'translateY(0)';
+                }, 400);
+            }
+        }
+
+        function switchTab(screenId, element) {
+            if (element.classList.contains('active-tab')) return;
+            
+            document.querySelectorAll('.bottom-nav-container').forEach(nav => {
+                nav.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active-tab'));
+            });
+            
+            navigateTo(screenId);
+        }
+
+        function navigateToDashboard() {
+            navigateTo('dashboard-screen');
+        }
+
+        function showToast(message, isSuccess = true) {
+            const toast = document.getElementById('toast');
+            const toastIcon = document.getElementById('toast-icon');
+            const toastMsg = document.getElementById('toast-message');
+
+            toastMsg.textContent = message;
+            if (isSuccess) {
+                toast.style.background = '#10B981';
+                toastIcon.className = "fa-solid fa-circle-check";
+            } else {
+                toast.style.background = '#EF4444';
+                toastIcon.className = "fa-solid fa-circle-exclamation";
+            }
+
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        }
+
+        /* ==================== AUTH HANDLERS ==================== */
+        function handleAuthSignup() {
+            const fullName = document.getElementById('signup-name').value.trim();
+            const email = document.getElementById('signup-email').value.trim();
+            const user = document.getElementById('signup-username').value.trim();
+            const pass = document.getElementById('signup-password').value.trim();
+
+            if (!fullName || !email || !user || !pass) {
+                showToast("Please fill in all registration fields.", false);
+                return;
+            }
+
+            if (mockUsers.some(u => u.username.toLowerCase() === user.toLowerCase())) {
+                showToast("Username already registered.", false);
+                return;
+            }
+
+            mockUsers.push({ username: user, password: pass, name: fullName });
+            showToast("Account registered! Please sign in.", true);
+
+            document.getElementById('signup-name').value = '';
+            document.getElementById('signup-email').value = '';
+            document.getElementById('signup-username').value = '';
+            document.getElementById('signup-password').value = '';
+            document.getElementById('login-username').value = user;
+
+            setTimeout(() => navigateTo('login-screen'), 1200);
+        }
+
+        function handleAuthLogin() {
+            const userVal = document.getElementById('login-username').value.trim();
+            const passVal = document.getElementById('login-password').value.trim();
+
+            const matchedUser = mockUsers.find(u => u.username === userVal && u.password === passVal);
+
+            if (matchedUser) {
+                activeStaffName = matchedUser.name;
+                document.getElementById('welcome-username').textContent = `Hello, ${activeStaffName}!`;
+                document.getElementById('profile-full-name').textContent = activeStaffName;
+                
+                showToast("Authenticated successfully!", true);
+                setTimeout(() => navigateTo('dashboard-screen'), 1000);
+            } else {
+                showToast("Invalid username or password.", false);
+            }
+        }
+
+        function performLogOut() {
+            if (isClockedIn) {
+                showToast("Please clock out of your shift before logging out.", false);
+                return;
+            }
+            showToast("Session terminated.", true);
+            document.getElementById('login-password').value = '';
+            setTimeout(() => navigateTo('login-screen'), 800);
+        }
+
+        /* ==================== ATTENDANCE ENGINE ==================== */
+        function startLiveClock() {
+            clockTimerId = setInterval(() => {
+                const now = new Date();
+                let hrs = now.getHours();
+                const mins = String(now.getMinutes()).padStart(2, '0');
+                const secs = String(now.getSeconds()).padStart(2, '0');
+                const ampm = hrs >= 12 ? 'PM' : 'AM';
+                hrs = hrs % 12;
+                hrs = hrs ? hrs : 12; 
+                
+                document.getElementById('live-time').textContent = `${String(hrs).padStart(2, '0')}:${mins}:${secs} ${ampm}`;
+                
+                const options = { weekday: 'long', month: 'short', day: '2-digit', year: 'numeric' };
+                document.getElementById('live-date').textContent = now.toLocaleDateString('en-US', options);
+            }, 1000);
+        }
+
+        function renderShiftLogs() {
+            const listContainer = document.getElementById('shift-log-list');
+            listContainer.innerHTML = '';
+
+            shiftLogsArray.forEach(item => {
+                const row = document.createElement('div');
+                row.className = `shift-row ${item.active ? 'active-shift' : ''} ${item.late && !item.active ? 'late-shift' : ''}`;
+                
+                let badgeClass = "completed";
+                let badgeText = "Finished";
+                if (item.active) { badgeClass = "active"; badgeText = "On-Duty"; }
+                else if (item.late) { badgeClass = "late"; badgeText = "Tardy"; }
+
+                row.innerHTML = `
+                    <div class="shift-info-left">
+                        <span class="shift-date-label">${item.date}</span>
+                        <span class="shift-timestamps"><i class="fa-regular fa-clock"></i> ${item.in} - ${item.out || 'Ongoing'}</span>
+                    </div>
+                    <div class="shift-info-right">
+                        <span class="shift-duration">${item.duration || '--'}</span>
+                        ${item.ot ? `<span class="shift-ot-label">OT: ${item.ot}</span>` : ''}
+                        <span class="shift-status-badge ${badgeClass}" style="margin-top:2px;">${badgeText}</span>
+                    </div>
+                `;
+                listContainer.appendChild(row);
+            });
+        }
+
+        function toggleShiftClock() {
+            const card = document.getElementById('clock-card');
+            const badge = document.getElementById('status-badge');
+            const statusText = document.getElementById('status-text');
+            const btn = document.getElementById('clock-btn');
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+            if (!isClockedIn) {
+                isClockedIn = true;
+                punchInTime = now;
+                card.classList.remove('alert-active');
+                badge.className = "status-badge active";
+                statusText.textContent = "Active Shift";
+                btn.textContent = "Clock Out Exit";
+                btn.classList.add('clocked-in');
+
+                const options = { month: 'short', day: '2-digit', year: 'numeric' };
+                const todayStr = now.toLocaleDateString('en-US', options);
+                
+                shiftLogsArray.unshift({
+                    date: todayStr,
+                    in: timeStr,
+                    out: null,
+                    duration: "0h 0m",
+                    ot: null,
+                    late: (now.getHours() >= 9 && now.getMinutes() > 0),
+                    active: true
+                });
+
+                showToast("Clock-in verification recorded!", true);
+            } else {
+                isClockedIn = false;
+                card.classList.add('alert-active');
+                badge.className = "status-badge alert";
+                statusText.textContent = "Clocked Out";
+                btn.textContent = "Clock In Entry";
+                btn.classList.remove('clocked-in');
+
+                const diffMs = now - punchInTime;
+                const diffMins = Math.floor(diffMs / 60000);
+                const hrs = Math.floor(diffMins / 60);
+                const remainingMins = diffMins % 60;
+
+                shiftLogsArray[0].out = timeStr;
+                shiftLogsArray[0].duration = `${hrs}h ${remainingMins}m`;
+                shiftLogsArray[0].active = false;
+
+                showToast("Shift summary finalized and posted!", true);
+            }
+            renderShiftLogs();
+        }
+
+        function triggerBiometricVerify() {
+            showToast("Scanning fingerprint sensor authentication layer...", true);
+        }
+
+        /* ==================== LEAVE HANDLING ==================== */
+        function toggleMCOption() {
+            const selection = document.getElementById('leave-type').value;
+            const mcBlock = document.getElementById('mc-block');
+            if (selection === "Medical / Sick Leave") {
+                mcBlock.style.display = "flex";
+                setTimeout(() => mcBlock.classList.add('show'), 10);
+            } else {
+                mcBlock.classList.remove('show');
+                setTimeout(() => mcBlock.style.display = "none", 350);
+            }
+        }
+
+        function handleFileAttach() {
+            const input = document.getElementById('mc-file-input');
+            if (input.files && input.files[0]) {
+                document.getElementById('attached-file-name').textContent = input.files[0].name;
+                document.getElementById('file-preview-capsule').style.display = "flex";
+            }
+        }
+
+        function clearAttachedFile() {
+            document.getElementById('mc-file-input').value = '';
+            document.getElementById('file-preview-capsule').style.display = "none";
+        }
+
+        function handleLeaveSubmit(e) {
+            e.preventDefault();
+            const leaveType = document.getElementById('leave-type').value;
+            const startStr = document.getElementById('start-date').value;
+            const endStr = document.getElementById('end-date').value;
+            const reason = document.getElementById('leave-reason').value.trim();
+
+            const d1 = new Date(startStr);
+            const d2 = new Date(endStr);
+            const diffTime = Math.abs(d2 - d1);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+            const newCard = document.createElement('div');
+            newCard.className = "history-card pending";
+            
+            const options = { month: 'short', day: '2-digit', year: 'numeric' };
+            const dateRangeText = `${d1.toLocaleDateString('en-US', options)} - ${d2.toLocaleDateString('en-US', options)} (${diffDays} days)`;
+
+            let hasMC = false;
+            let mcName = "";
+            if (leaveType === "Medical / Sick Leave" && document.getElementById('mc-file-input').files[0]) {
+                hasMC = true;
+                mcName = document.getElementById('mc-file-input').files[0].name;
+            }
+
+            newCard.innerHTML = `
+                <div class="history-details">
+                    <span class="history-type">${leaveType}</span>
+                    <span class="history-date">${dateRangeText}</span>
+                    <span class="history-reason">Reason: ${reason}</span>
+                    ${hasMC ? `<span class="history-attachment-tag"><i class="fa-solid fa-paperclip"></i> ${mcName}</span>` : ''}
+                </div>
+                <span class="history-badge pending">Pending</span>
+            `;
+
+            document.getElementById('leave-history-list').prepend(newCard);
+
+            if (leaveType === "Medical / Sick Leave") {
+                sickLeaveLeft = Math.max(0, sickLeaveLeft - Math.round(diffDays * 5.0));
+                document.getElementById('bal-sick').textContent = `${sickLeaveLeft}%`;
+                document.getElementById('circle-sick').style.setProperty('--percent', sickLeaveLeft);
+            } else if (leaveType === "Casual Leave") {
+                casualLeaveLeft = Math.max(0, casualLeaveLeft - Math.round(diffDays * 10.0));
+                document.getElementById('bal-casual').textContent = `${casualLeaveLeft}%`;
+                document.getElementById('circle-casual').style.setProperty('--percent', casualLeaveLeft);
+            } else if (leaveType === "Unpaid Leave") {
+                unpaidLeaveLeft = Math.max(0, unpaidLeaveLeft - Math.round(diffDays * 15.0));
+                document.getElementById('bal-unpaid').textContent = `${unpaidLeaveLeft}%`;
+                document.getElementById('circle-unpaid').style.setProperty('--percent', unpaidLeaveLeft);
+            }
+
+            document.getElementById('leave-form').reset();
+            clearAttachedFile();
+            toggleMCOption();
+            
+            showToast("Leave request submitted successfully!", true);
+        }
+
+        /* ==================== PAYROLL & BROADCAST CAROUSEL ==================== */
+        function updatePayslipContentView() {
+            const choice = document.getElementById('payslip-selector').value;
+            const header = document.getElementById('payslip-main-header');
+            const otLabel = document.getElementById('payslip-ot-label');
+            const otVal = document.getElementById('payslip-ot-val');
+            const netVal = document.getElementById('payslip-net-amount');
+
+            header.textContent = `Earnings Overview - ${choice}`;
+            if (choice === "March 2026") {
+                otLabel.textContent = "Overtime Hours (12h x RM21.75)";
+                otVal.textContent = "RM 261.00";
+                netVal.textContent = "RM 2,510.40";
+            } else if (choice === "February 2026") {
+                otLabel.textContent = "Overtime Hours (0h)";
+                otVal.textContent = "RM 0.00";
+                netVal.textContent = "RM 2,195.15";
+            } else {
+                otLabel.textContent = "Overtime Hours (8h x RM21.75)";
+                otVal.textContent = "RM 174.00";
+                netVal.textContent = "RM 2,402.51";
+            }
+        }
+
+        function selectArchivedPayslipIndex(month) {
+            document.getElementById('payslip-selector').value = month;
+            updatePayslipContentView();
+            showToast(`Loaded ${month} transaction sheet logs.`, true);
+        }
+
+        // ==================== WORKING PDF GENERATION ENGINE ====================
+        function generatePayslipPDF() {
+            showToast("Compiling secure payroll transaction PDF...", true);
+            
+            // Safe reference extraction from target DOM Elements
+            const targetCycle = document.getElementById('payslip-selector').value;
+            const netAmount = document.getElementById('payslip-net-amount').textContent;
+            const otValue = document.getElementById('payslip-ot-val').textContent;
+            const otDescription = document.getElementById('payslip-ot-label').textContent;
+
+            // Instantiating jsPDF component wrapper
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+            // Brand Header Palette Rendering
+            doc.setFillColor(230, 28, 36); // #E61C24 Brand Red
+            doc.rect(0, 0, 210, 40, 'F');
+
+            doc.setTextColor(255, 255, 255);
+            doc.setFont("Helvetica", "bold");
+            doc.setFontSize(24);
+            doc.text("HEMZAL CRISPY CHICKEN", 14, 18);
+            
+            doc.setFont("Helvetica", "normal");
+            doc.setFontSize(10);
+            doc.text("Internal Employee Statement Slip // Corporate Ledger", 14, 25);
+            doc.text(`Generated Timeline: ${new Date().toLocaleString()}`, 14, 30);
+
+            // Employee Metadata Matrix Block
+            doc.setTextColor(50, 50, 50);
+            doc.setFont("Helvetica", "bold");
+            doc.setFontSize(12);
+            doc.text("EMPLOYEE INFORMATION", 14, 55);
+            doc.line(14, 57, 196, 57);
+
+            doc.setFont("Helvetica", "normal");
+            doc.setFontSize(10);
+            doc.text(`Staff Full Name:    ${activeStaffName}`, 14, 65);
+            doc.text("Employee ID:        EM-2026-089", 14, 71);
+            doc.text("Assigned Branch:    Ampang Jaya Branch", 14, 77);
+            doc.text(`Settlement Cycle:   ${targetCycle}`, 14, 83);
+
+            // Earnings Computation Breakdown Grid Layout
+            doc.setFont("Helvetica", "bold");
+            doc.setFontSize(12);
+            doc.text("EARNINGS & ALLOWANCES", 14, 98);
+            doc.line(14, 100, 196, 100);
+
+            doc.setFont("Helvetica", "normal");
+            doc.setFontSize(10);
+            doc.text("Regular Base Hours (160h x RM14.50)", 14, 108);
+            doc.text("RM 2,320.00", 160, 108, { align: 'right' });
+
+            doc.text(otDescription, 14, 115);
+            doc.text(otValue, 160, 115, { align: 'right' });
+
+            doc.text("Performance Allowance Incentive", 14, 122);
+            doc.text("RM 200.00", 160, 122, { align: 'right' });
+
+            // Deductions Matrix Computation Grid Layout
+            doc.setFont("Helvetica", "bold");
+            doc.text("STATUTORY DEDUCTIONS", 14, 137);
+            doc.line(14, 139, 196, 139);
+
+            doc.setFont("Helvetica", "normal");
+            doc.text("EPF Staff Contribution (11%)", 14, 147);
+            doc.text("-RM 274.34", 160, 147, { align: 'right' });
+
+            doc.text("SOCSO Insurance Deduction", 14, 154);
+            doc.text("-RM 12.45", 160, 154, { align: 'right' });
+
+            doc.text("EIS Employment Loss Protection", 14, 161);
+            doc.text("-RM 4.70", 160, 161, { align: 'right' });
+
+            // Final Sum Summary Banner Layout Block
+            doc.setFillColor(255, 213, 0); // Brand Yellow Accent Payout Header
+            doc.rect(14, 175, 182, 16, 'F');
+            
+            doc.setTextColor(30, 30, 30);
+            doc.setFont("Helvetica", "bold");
+            doc.setFontSize(12);
+            doc.text("NET TAKE-HOME DISBURSEMENT:", 20, 185);
+            doc.setFontSize(14);
+            doc.text(netAmount, 190, 185, { align: 'right' });
+
+            // Official System Verification Seal Stamp
+            doc.setTextColor(140, 140, 140);
+            doc.setFont("Helvetica", "oblique");
+            doc.setFontSize(9);
+            doc.text("This document is systematically verified and signed. No handwritten authentication is required.", 14, 210);
+
+            // Document Stream Download Call
+            const formattedFileName = `Payslip_${targetCycle.replace(/\s+/g, '_')}_${activeStaffName.replace(/\s+/g, '_')}.pdf`;
+            doc.save(formattedFileName);
+        }
+
+        function setAnnouncementSlide(index) {
+            const slides = document.querySelectorAll('.announcement-slide');
+            const dots = document.querySelectorAll('.announcement-dots .dot');
+            
+            slides[currentSlide].classList.remove('active');
+            dots[currentSlide].classList.remove('active');
+            
+            currentSlide = index;
+            
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+        }
+
+        function startAnnouncementCarousel() {
+            setInterval(() => {
+                let next = (currentSlide + 1) % document.querySelectorAll('.announcement-slide').length;
+                setAnnouncementSlide(next);
+            }, 5000);
+        }
+
+        window.onload = function() {
+            startLiveClock();
+            renderShiftLogs();
+            startAnnouncementCarousel();
+            
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('start-date').value = today;
+            document.getElementById('end-date').value = today;
+        }
+    </script>
+</body>
+</html>
